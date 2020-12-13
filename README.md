@@ -14,9 +14,13 @@ masscan + nmap 快速端口存活检测和服务识别。
 ## 文件说明
 简要文件说明如下：
 
-* masnmap.py： masscan + nmap结合快速端口存活和服务探测脚本；
+* masnmap.py: masscan + nmap结合快速端口存活和服务探测脚本；
 * ips.txt: 需探测的ip地址列表，每行一个ip地址；
+* services.txt: 保存探测的结果，以"序号：ip：端口：服务名"
+`msg = '{}:{}:{}:{}'.format(index, ip, port, service)`
 
+
+ 
 ## 参数配置说明
 简要参数说明如下：
 
@@ -64,3 +68,25 @@ masscan rate 100 0000，并发nmap进程数800，共耗时：
 `It takes 800 process 4761 seconds to run ... 231687 tasks`
 
 具体参数值配置需要根据扫描机器的性能和带宽进行调整。
+
+## 脚本优化
+
+### 版本探测
+
+如上说明，masnmap.py只是探测服务的，如需获取服务的版本信息，可以使用`-sV`替换`-sS`。
+
+使用如下替换nmap_scan中对应的内容，可以获取服务详细版本信息，但速率会有较大的影响。
+
+```
+    ret = nm.scan(ip, port, arguments='-sV')
+    # print(ret)
+    name = ret['scan'][ip]['tcp'][int(port)]['name']
+    product = ret['scan'][ip]['tcp'][int(port)]['product']
+    version = ret['scan'][ip]['tcp'][int(port)]['version']
+    msg = '{}:{}:{}:{}:{}:{}'.format(index, ip, port, name, product, version)
+```
+
+### 其它可优化项
+
+* 使用其它更`有效`的方式替换多进程；
+* 针对重要服务的版本探测，提高检测速率；
