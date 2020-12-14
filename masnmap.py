@@ -13,11 +13,11 @@ import os
 ip_file = 'ips.txt'
 # masscan_exe = '/usr/local/bin/masscan'
 masscan_exe = '/usr/bin/masscan'
-masscan_rate = 1000000
+masscan_rate = 2000
 masscan_file = 'masscan.json'
 task_queue = Queue()
 result_queue = Queue()
-process_num = 800
+process_num = 50
 total_ports = 0
 services_info = []
 
